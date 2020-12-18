@@ -11,8 +11,8 @@ public class Covid_k {
             System.exit(0);
         }
         else {
-            QuickSort quickSort = new QuickSort();
-            quickSort.sort(cities, 0, cities.length - 1);
+            Sort qs = new Sort();
+            qs.quickSort(cities, 0, cities.length - 1);
             System.out.println("The top " + kParameter + " cities are:");
             for(int i = 0; i < kParameter; i++) {
                 System.out.println(cities[i].getName());

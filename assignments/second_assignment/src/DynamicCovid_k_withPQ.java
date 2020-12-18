@@ -2,21 +2,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+public class DynamicCovid_k_withPQ {
 
-public class ReadFile {
+    public static void main(String[] args) {
+        String file = args[0];//"C:\\Users\\User\\Desktop\\ergasia2domes\\src\\DailyCovidCases";
+        int kParameter = Integer.parseInt(args[1]);
+        PQ priorityQueue = new PQ(kParameter);
 
-    public ReadFile() {
-    }
-
-    public City[] readFile(String file) {
-        StringDoubleEndedQueueImpl<City> covidCities = new StringDoubleEndedQueueImpl<City>();
-        try{
+        try {
             File myObj = new File(file);
             Scanner myReader = new Scanner(myObj);
-            String [] arr;
+            String[] arr;
             int ID, population, covidCases;
             String name;
-
+            int counter =0;
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
 
@@ -26,52 +25,45 @@ public class ReadFile {
                 population = Integer.parseInt(arr[2]);
                 covidCases = Integer.parseInt(arr[3]);
 
-                if ( ID > 10_000 || ID <= 0 ){
+                if (ID > 10_000 || ID <= 0) {
                     System.err.println("Invalid ID");
                     System.exit(1);
                 }
 
-                if ( name.length() > 50 ){
+                if (name.length() > 50) {
                     System.err.println("Invalid name");
                     System.exit(1);
                 }
-                if ( population >10_000_000){
+                if (population > 10_000_000) {
                     System.err.println("Invalid population");
                     System.exit(1);
                 }
-                if (covidCases > population){
+                if (covidCases > population) {
                     System.err.println("Invalid covidcases");
                     System.exit(1);
                 }
-
-
                 City city = new City(ID, name, population, covidCases);
-                covidCities.addFirst(city);
+                priorityQueue.insert(city);
+                counter++;
+                if ( counter % 5 == 0){
+                    System.out.println(" Top K cities are: " + counter);
+                    priorityQueue.printKelements(kParameter);
+                }
+                System.out.println(counter);
             }
+            System.out.println(" Top K cities are: " + counter);
+            priorityQueue.printAll();
 
-                myReader.close();
+            City [] cities = priorityQueue.toAr(priorityQueue);
+            for(City c:cities)
+                System.out.println(c);
+            myReader.close();
+
         } catch (FileNotFoundException e) {
             System.err.println("An error occurred.");
             e.printStackTrace();
         }
-        City[] cities = toArray(covidCities);
 
-        return cities;
-    }
-
-
-    private City[] toArray(StringDoubleEndedQueueImpl queue){
-        StringDoubleEndedQueueImpl temp = queue;
-        City[] cities = new City[temp.size()];
-        int i = 0;
-       do{
-            cities[i] = (City)temp.getLast();
-            temp.removeLast();
-            i++;
-
-
-        } while (!temp.isEmpty());
-        return cities;
 
     }
 }

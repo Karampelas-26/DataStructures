@@ -1,19 +1,19 @@
-public class QuickSort {
+public class Sort {
 
 
-    public QuickSort() {
+    public Sort() {
     }
 
-    public void sort(City[] arr, int start, int end){
-
+    public void quickSort(City[] arr, int start, int end){
         if (end <= start) return;
         int i = partition(arr, start, end);
-        sort(arr, start, i-1);
-        sort(arr, i+1, end);
+        quickSort(arr, start, i-1);
+        quickSort(arr, i+1, end);
     }
 
     private int partition(City[] array, int left, int right) {
         City pivot = array[right];
+
         int partitionIndex = left;
         for (int i =left; i< right; i++){
             if (array[i].compareTo(pivot) > 0){ //descending order
@@ -44,4 +44,5 @@ public class QuickSort {
         arr[i] = arr[j];
         arr[j] = temp;
     }
+
 }

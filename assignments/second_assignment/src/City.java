@@ -7,8 +7,13 @@ public class City implements  CityInterface, Comparable<City>{
     private int population;
     private int CovidCases;
 
+//    protected static StringDoubleEndedQueueImpl<Integer> IDs = new StringDoubleEndedQueueImpl<>();
+
+
+
 
     public City(int ID, String name, int population, int covidCases) {
+
         this.ID = ID;
         this.name = name;
         this.population = population;
@@ -77,6 +82,22 @@ public class City implements  CityInterface, Comparable<City>{
         double density = (this.getCovidCases() * 50_000)/ this.getPopulation();
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
-        return Double.parseDouble(df.format(density));
+        try{
+            return Double.parseDouble((df.format(density)));
+        } catch (NumberFormatException e){
+            System.out.println("Not a number "+this.name);
+            return 0;
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", population=" + population +
+                ", CovidCases=" + CovidCases +
+                '}';
     }
 }

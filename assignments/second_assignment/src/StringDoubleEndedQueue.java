@@ -64,4 +64,7 @@ public interface StringDoubleEndedQueue<T> {
 	 * @return number of elements in the queue
 	 */
 	public int size();
+
+
+//	public boolean include(T item);
 }
