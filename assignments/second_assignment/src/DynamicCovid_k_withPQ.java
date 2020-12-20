@@ -8,6 +8,7 @@ public class DynamicCovid_k_withPQ {
         String file = args[0];//"C:\\Users\\User\\Desktop\\ergasia2domes\\src\\DailyCovidCases";
         int kParameter = Integer.parseInt(args[1]);
         PQ priorityQueue = new PQ(kParameter);
+        int citiesIDs[] = new int[5];
 
         try {
             File myObj = new File(file);
@@ -44,19 +45,41 @@ public class DynamicCovid_k_withPQ {
                 }
                 City city = new City(ID, name, population, covidCases);
                 priorityQueue.insert(city);
+                citiesIDs = priorityQueue.toArray();
+
+                //print cities id
+                for (int i: citiesIDs)
+                    System.out.print(i+" ");
+                System.out.println("");
+//                System.out.println(citiesIDs.length);
+
+                //remove last city
+                if (citiesIDs.length > kParameter){
+                  priorityQueue.remove(citiesIDs[citiesIDs.length-1]);
+                  System.out.println("remove");
+                }
+
+
+                //print cities id
+                citiesIDs = priorityQueue.toArray();
+                for (int i: citiesIDs)
+                    System.out.print(i+" ");
+                System.out.println("------------------");
+
+                //pritn k cities
                 counter++;
                 if ( counter % 5 == 0){
                     System.out.println(" Top K cities are: " + counter);
-                    priorityQueue.printKelements(kParameter);
+                    priorityQueue.printAll();
                 }
-                System.out.println(counter);
+//                System.out.println(counter);
             }
-            System.out.println(" Top K cities are: " + counter);
+            System.out.println(" ok: " + counter);
             priorityQueue.printAll();
 
-            City [] cities = priorityQueue.toAr(priorityQueue);
-            for(City c:cities)
-                System.out.println(c);
+//            City [] cities = priorityQueue.toAr(priorityQueue);
+//            for(City c:cities)
+//                System.out.println(c);
             myReader.close();
 
         } catch (FileNotFoundException e) {

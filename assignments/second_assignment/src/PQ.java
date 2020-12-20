@@ -24,11 +24,11 @@ public class PQ implements InterfacePQ{
 
     @Override
     public void insert(City x) {
-        size++;
-        if(size == (heap.length*3/4))
+        if(size == ((heap.length -1)*3/4))
             resize();
-        heap[size] =  x;
-        IDs[size] = x.getID();
+
+        heap[++size] =  x;
+         IDs[size] = x.getID();
         swim((size));
     }
 
@@ -52,25 +52,44 @@ public class PQ implements InterfacePQ{
         return root;
     }
 
+//    @Override
+//    public City remove(int id) {
+//        int i = IDs[0];
+//        if (id == i ){
+//            swap(i,0);
+//            return getMax();
+//        }
+//        else if (IDs[i*2] > IDs[(i*2)+1]){
+//            i = i*2;
+//            return remove(IDs[i*2]);
+//        }
+//        else {
+//           i = i*2+1;
+//            return remove(IDs[(i * 2) + 1]);
+//        }
+//    }
+
+
     @Override
     public City remove(int id) {
-        int i = IDs[0];
-        if (id == i ){
-            swap(i,0);
-            return getMax();
-        }
-        else if (IDs[i*2] > IDs[(i*2)+1]){
-            i = i*2;
-            return remove(IDs[i*2]);
-        }
-        else {
-            i = i*2+1;
-            return remove(IDs[(i * 2) + 1]);
-        }
+        City temp = new City();
+        for (int i = 1; i <= size; i++){
+            if (heap[i].getID() == id){
+                swap(1,i);
+//                temp = heap[i];
+               // heap[i] = heap[size];
+//               size--;
+              // swim(size);
+
+                break;
+            }
+
+            }
+        return getMax();
     }
 
     private void swim(int i) {
-        if (i ==1)
+        if (i == 1)
             return;
         int parent = i/2;
 
@@ -95,7 +114,7 @@ public class PQ implements InterfacePQ{
             int max = left;
 
             if (right <= size) {
-                if (heap[left].compareTo(heap[right]) < 0)
+                if (heap[left].compareTo(heap[right]) < 0   )
                     max = right;
             }
             if (heap[i].compareTo(heap[max]) >= 0)
@@ -105,7 +124,7 @@ public class PQ implements InterfacePQ{
                 swap(i, max);
                 i = max;
                 left = 2 * i;
-                right = 2 * i + 1;
+                right = left + 1;
 
             }
 
@@ -114,12 +133,12 @@ public class PQ implements InterfacePQ{
 
     private void swap(int i, int j) {
         City temp = heap[i];
-        heap[j] = heap[i];
-        heap[i] = temp;
+        heap[i] = heap[j];
+        heap[j] = temp;
 
         int temp1 = IDs[i];
-        IDs[j] = IDs[i];
-        IDs[i] = temp1;
+        IDs[i] = IDs[j];
+        IDs[j] = temp1;
     }
 
     public void resize(){
@@ -134,40 +153,18 @@ public class PQ implements InterfacePQ{
         IDs = newIDs;
     }
 
-
-    public void printKelements(int k){
-        for(int i=1; i<= k; i++) {
-            if( heap[i] != null)
-                System.out.println(heap[i]);
-        }
-
-    }
      public void printAll(){
-        for (City h:heap){
-            if(h != null)
-                System.out.println(h);
-        }
+        for (int i =1; i <= size; i++)
+            System.out.println(heap[i]);
      }
 
      //HREMA//
 
-    public City[] toAr(PQ queue){
-        PQ temp = queue;
-        City[] cities = new City[temp.size()];
-        int i = 0;
-        do{
-            temp.insert( cities[i]);
-            if(cities[i].compareTo(cities[i+1]) == 0){
-               int  tempid = (Integer.parseInt(String.valueOf(cities[i])));
-               remove(tempid);
-            }
-                i++;
-
-
-            }
-            while (!temp.isEmpty());
-        return cities;
-
+    public int[] toArray(){
+        int[] citiesIDs = new int[size];
+        for (int i = 0; i < size; i++)
+            citiesIDs[i] = IDs[i+1];
+        return citiesIDs;
     }
 
 

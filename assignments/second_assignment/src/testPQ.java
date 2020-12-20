@@ -9,7 +9,7 @@ public class testPQ {
         City cit5 = new City(6, "Arta", 43166, 5);
         City cit6 = new City(7, "Hgoumenitsa", 510746 ,500);
         City cit7 = new City(8, "Prebeza" ,35089, 79);
-        City cit8 = new City(9 ,"Ioannina" ,150030, 82000);
+        City cit8 = new City(9 ,"Ioannina" ,150000, 82000);
         City cit9 = new City(10, "Trikala", 80302 ,7);
 
 
@@ -42,7 +42,7 @@ public class testPQ {
          pq.printAll();
         System.out.println("###################");
 
-        pq.printAll();
+        System.out.println(Double.MAX_VALUE);
 
 
     }

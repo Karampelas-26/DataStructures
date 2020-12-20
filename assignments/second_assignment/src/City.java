@@ -1,4 +1,5 @@
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class City implements  CityInterface, Comparable<City>{
 
@@ -6,6 +7,7 @@ public class City implements  CityInterface, Comparable<City>{
     private String name;
     private int population;
     private int CovidCases;
+    private final long f = 50_000;
 
 //    protected static StringDoubleEndedQueueImpl<Integer> IDs = new StringDoubleEndedQueueImpl<>();
 
@@ -67,28 +69,26 @@ public class City implements  CityInterface, Comparable<City>{
     @Override
     public int compareTo(City obj) {
             double compared = this.calculateDensity() - obj.calculateDensity();
+//            System.out.println(this.name+ " "+compared+" "+obj.name);
             if(compared > 0){
                 return 1;
             }
-            else if (compared == 0){
-                return 0;
+            else if (compared < 0){
+                return -1;
             }
-            else return -1;
+            else return 0;
 
     }
 
 
     public double calculateDensity( ){
-        double density = (this.getCovidCases() * 50_000)/ this.getPopulation();
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-        try{
-            return Double.parseDouble((df.format(density)));
-        } catch (NumberFormatException e){
-            System.out.println("Not a number "+this.name);
-            return 0;
-        }
+        long covid = (long) this.getCovidCases();
+        long mul = covid*f;
+        double density = mul / (double)this.getPopulation();
+        NumberFormat df = new DecimalFormat("#0.00");
 
+        System.out.println(this.ID+" "+ this.name+" density "+df.format(density));
+        return Double.parseDouble((df.format(density)));
     }
 
     @Override
