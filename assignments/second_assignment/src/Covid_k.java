@@ -2,7 +2,7 @@ public class Covid_k {
 
 
     public static void main(String[] args) {
-        String file = args[0];//"C:\\Users\\User\\Desktop\\ergasia2domes\\src\\DailyCovidCases";
+        String file = args[0];
         int kParameter = Integer.parseInt(args[1]);
         ReadFile reader = new ReadFile();
         City[] cities = reader.readFile(file);

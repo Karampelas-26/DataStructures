@@ -8,12 +8,12 @@ public class PQ implements InterfacePQ{
 
 
     public PQ(int length) {
-
         this.heap =  new City[length + 1];
         this.size = 0;
         this.IDs = new int[1000];
     }
 
+    //copyConstructor
     public PQ(PQ priorityQueue){
         this.heap = new City[priorityQueue.heap.length];
         for(int i = 0; i < heap.length; i++){
@@ -36,12 +36,12 @@ public class PQ implements InterfacePQ{
     }
 
     @Override
-    public void insert(City x) {
+    public void insert(City item) {
         if(size == ((heap.length -1)*3/4))
             resize();
 
-        heap[++size] =  x;
-        IDs[x.getID()] = size;
+        heap[++size] =  item;
+        IDs[item.getID()] = size;
         swim(size);
     }
 
@@ -52,17 +52,6 @@ public class PQ implements InterfacePQ{
 
     @Override
     public City getMax() {
-//        if(size == 0)
-//            return null;
-//
-//        City root = heap[1];
-//        heap[1] = heap[size];
-//        IDs[1] = IDs[size];
-//        size--;
-//
-//        sink(1);
-//
-//        return root;
         return remove(heap[1].getID());
     }
 
@@ -74,8 +63,6 @@ public class PQ implements InterfacePQ{
         City temp = heap[position];
         heap[position] = heap[size];
         IDs[heap[position].getID()] = position;
-//        heap[size] = null;
-//        IDs[temp.getID()] = 0;
         size--;
         sink(position);
         return temp;
@@ -137,19 +124,7 @@ public class PQ implements InterfacePQ{
         for (int i = 1; i <= size; i++) {
             newHeap[i] = heap[i];
         }
-
         heap = newHeap;
-//        IDs = newIDs;
     }
-
-     public void printAll(){
-        for (int i =1; i <= size; i++)
-            System.out.println(heap[i]);
-     }
-
-    public City getElementByPosition(int position){
-        return heap[position];
-    }
-
 
 }
