@@ -32,7 +32,7 @@ public class DynamicCovid_k_withPQ {
                 }
 
                 if (name.length() > 50) {
-                    System.err.println("Invalid name");
+                System.err.println("Invalid name");
                     System.exit(1);
                 }
                 if (population > 10_000_000) {
@@ -45,7 +45,7 @@ public class DynamicCovid_k_withPQ {
                 }
                 City city = new City(ID, name, population, covidCases);
                 priorityQueue.insert(city);
-                citiesIDs = priorityQueue.toArray();
+//                citiesIDs = priorityQueue.toArray();
 
                 //print cities id
                 for (int i: citiesIDs)
@@ -61,7 +61,7 @@ public class DynamicCovid_k_withPQ {
 
 
                 //print cities id
-                citiesIDs = priorityQueue.toArray();
+//                citiesIDs = priorityQueue.toArray();
                 for (int i: citiesIDs)
                     System.out.print(i+" ");
                 System.out.println("------------------");

@@ -4,7 +4,7 @@ public interface InterfacePQ {
 
     int size();
 
-    void insert (City x);
+    void insert (City item);
 
     City max();
 

@@ -8,6 +8,7 @@ public class City implements  CityInterface, Comparable<City>{
     private int population;
     private int CovidCases;
     private final long f = 50_000;
+    private double density = calculateDensity();
 
 //    protected static StringDoubleEndedQueueImpl<Integer> IDs = new StringDoubleEndedQueueImpl<>();
 
@@ -20,6 +21,7 @@ public class City implements  CityInterface, Comparable<City>{
         this.name = name;
         this.population = population;
         this.CovidCases = covidCases;
+        this.density = calculateDensity();
     }
 
     public City() {
@@ -68,7 +70,7 @@ public class City implements  CityInterface, Comparable<City>{
 
     @Override
     public int compareTo(City obj) {
-            double compared = this.calculateDensity() - obj.calculateDensity();
+            double compared = this.density - obj.density;
 //            System.out.println(this.name+ " "+compared+" "+obj.name);
             if(compared > 0){
                 return 1;
@@ -87,17 +89,19 @@ public class City implements  CityInterface, Comparable<City>{
         double density = mul / (double)this.getPopulation();
         NumberFormat df = new DecimalFormat("#0.00");
 
-        System.out.println(this.ID+" "+ this.name+" density "+df.format(density));
+//        System.out.println(this.ID+" "+ this.name+" density "+df.format(density));
         return Double.parseDouble((df.format(density)));
     }
 
     @Override
     public String toString() {
-        return "City{" +
-                "ID=" + ID +
-                ", name='" + name + '\'' +
-                ", population=" + population +
-                ", CovidCases=" + CovidCases +
-                '}';
+        final StringBuilder sb = new StringBuilder("City{");
+        sb.append("ID=").append(ID);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", population=").append(population);
+        sb.append(", CovidCases=").append(CovidCases);
+        sb.append(", density=").append(density);
+        sb.append('}');
+        return sb.toString();
     }
 }

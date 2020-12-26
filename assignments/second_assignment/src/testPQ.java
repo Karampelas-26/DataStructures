@@ -15,35 +15,31 @@ public class testPQ {
 
         PQ pq = new PQ(6);
         pq.insert(cit1);
-        pq.printAll();
-        System.out.println("###################");
         pq.insert(cit2);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit3);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit4);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit5);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit6);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit7);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit8);
-         pq.printAll();
-        System.out.println("###################");
         pq.insert(cit9);
-         pq.printAll();
-        System.out.println("###################");
+        City pr = pq.remove(8);
 
-        System.out.println(Double.MAX_VALUE);
+        System.out.println("remove prebeza "+pr);
 
+
+        //remove each time max of pq and print it
+        City[] cc = new City[pq.size()];
+        for (int i = 0; i < cc.length; i++){
+            cc[i] = pq.getMax();
+            System.out.println(cc[i]);
+        }
+
+//        for(int j = 0; j <1000; j++){
+//            if (pq.IDs[j] != 0)
+//                System.out.println(j+"->"+pq.IDs[j]);
+//        }
+        System.out.println("=================");
 
     }
 }

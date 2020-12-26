@@ -1,3 +1,5 @@
+import java.util.IdentityHashMap;
+
 public class PQ implements InterfacePQ{
 
     private City[] heap;
@@ -9,7 +11,18 @@ public class PQ implements InterfacePQ{
 
         this.heap =  new City[length + 1];
         this.size = 0;
-        this.IDs = new int[length +1];
+        this.IDs = new int[1000];
+    }
+
+    public PQ(PQ priorityQueue){
+        this.heap = new City[priorityQueue.heap.length];
+        for(int i = 0; i < heap.length; i++){
+            this.heap[i] = priorityQueue.heap[i];
+        }
+        this.IDs = new int[1000];
+        for(int i = 0; i < 1000; i++)
+            this.IDs[i] = priorityQueue.IDs[i];
+        this.size = priorityQueue.size();
     }
 
     @Override
@@ -28,8 +41,8 @@ public class PQ implements InterfacePQ{
             resize();
 
         heap[++size] =  x;
-         IDs[size] = x.getID();
-        swim((size));
+        IDs[x.getID()] = size;
+        swim(size);
     }
 
     @Override
@@ -39,53 +52,33 @@ public class PQ implements InterfacePQ{
 
     @Override
     public City getMax() {
-        if(size == 0)
-            return null;
-
-        City root = heap[1];
-        heap[1] = heap[size];
-        IDs[1] = IDs[size];
-        size--;
-
-        sink(1);
-
-        return root;
+//        if(size == 0)
+//            return null;
+//
+//        City root = heap[1];
+//        heap[1] = heap[size];
+//        IDs[1] = IDs[size];
+//        size--;
+//
+//        sink(1);
+//
+//        return root;
+        return remove(heap[1].getID());
     }
-
-//    @Override
-//    public City remove(int id) {
-//        int i = IDs[0];
-//        if (id == i ){
-//            swap(i,0);
-//            return getMax();
-//        }
-//        else if (IDs[i*2] > IDs[(i*2)+1]){
-//            i = i*2;
-//            return remove(IDs[i*2]);
-//        }
-//        else {
-//           i = i*2+1;
-//            return remove(IDs[(i * 2) + 1]);
-//        }
-//    }
-
 
     @Override
     public City remove(int id) {
-        City temp = new City();
-        for (int i = 1; i <= size; i++){
-            if (heap[i].getID() == id){
-                swap(1,i);
-//                temp = heap[i];
-               // heap[i] = heap[size];
-//               size--;
-              // swim(size);
-
-                break;
-            }
-
-            }
-        return getMax();
+        int position = IDs[id];
+        if (size == 0)
+            return null;
+        City temp = heap[position];
+        heap[position] = heap[size];
+        IDs[heap[position].getID()] = position;
+//        heap[size] = null;
+//        IDs[temp.getID()] = 0;
+        size--;
+        sink(position);
+        return temp;
     }
 
     private void swim(int i) {
@@ -119,13 +112,11 @@ public class PQ implements InterfacePQ{
             }
             if (heap[i].compareTo(heap[max]) >= 0)
                 return;
-
             else {
                 swap(i, max);
                 i = max;
                 left = 2 * i;
                 right = left + 1;
-
             }
 
         }
@@ -136,21 +127,19 @@ public class PQ implements InterfacePQ{
         heap[i] = heap[j];
         heap[j] = temp;
 
-        int temp1 = IDs[i];
-        IDs[i] = IDs[j];
-        IDs[j] = temp1;
+        int temp2 = IDs[heap[i].getID()];
+        IDs[heap[i].getID()] = IDs[heap[j].getID()];
+        IDs[heap[j].getID()] = temp2;
     }
 
     public void resize(){
         City[] newHeap =  new City[heap.length * 2];
-        int[] newIDs = new int[IDs.length*2];
         for (int i = 1; i <= size; i++) {
             newHeap[i] = heap[i];
-            newIDs[i] = IDs[i];
         }
 
         heap = newHeap;
-        IDs = newIDs;
+//        IDs = newIDs;
     }
 
      public void printAll(){
@@ -158,13 +147,8 @@ public class PQ implements InterfacePQ{
             System.out.println(heap[i]);
      }
 
-     //HREMA//
-
-    public int[] toArray(){
-        int[] citiesIDs = new int[size];
-        for (int i = 0; i < size; i++)
-            citiesIDs[i] = IDs[i+1];
-        return citiesIDs;
+    public City getElementByPosition(int position){
+        return heap[position];
     }
 
 
