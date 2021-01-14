@@ -38,7 +38,7 @@ public class StringDoubleEndedQueueImpl<T> implements StringDoubleEndedQueue<T> 
         if (this.isEmpty()) {
             throw new NoSuchElementException();
         }
-        String data = (String) head.getData();
+        T data = (T) head.getData();
         if (head == tail) {
             head = null;
             tail = null;
@@ -70,7 +70,7 @@ public class StringDoubleEndedQueueImpl<T> implements StringDoubleEndedQueue<T> 
         if (this.isEmpty()) {
             throw new NoSuchElementException();
         }
-        String data = (String) tail.getData();
+        T data = (T) tail.getData();
         if (head == tail) {
             head = null;
             tail = null;

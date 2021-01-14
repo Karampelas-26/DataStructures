@@ -3,12 +3,11 @@ public class TreeNode {
     private Suspect item;
     private TreeNode left; //pointer to left subtree
     private TreeNode right; //pointer to right subtree
+    private TreeNode parent;
     private int N; //number of subtree rooted at this TreeNode
 
     public TreeNode(Suspect item) {
         this.item = item;
-        this.left = left;
-        this.right = right;
     }
 
     public TreeNode() {
@@ -40,5 +39,13 @@ public class TreeNode {
 
     public int getN() {
         return N;
+    }
+
+    public TreeNode getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNode parent) {
+        this.parent = parent;
     }
 }

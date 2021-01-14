@@ -5,48 +5,100 @@ import java.util.Scanner;
 public class RandomizeBST implements MafiaInterface{
 
     private TreeNode root;
+    private int size;
 
     public RandomizeBST() {
+        this.root = null;
+        this.size = 0;
     }
+
+    private TreeNode rootInsert(TreeNode root, Suspect item, TreeNode parent) {
+
+        if (root == null) {
+            TreeNode node = new TreeNode(item);
+            node.setParent(parent);
+            ++size;
+            return node;
+        }
+
+        if (item.key() == root.getItem().key()) {
+            System.out.println("Suspect with ID: " + item.key() + " already exists.");
+            return root;
+        }
+
+        if (item.key() < root.getItem().key()) {
+            TreeNode leftSubtreeRoot = this.rootInsert(root.getLeft(), item, root);
+            root.setLeft(leftSubtreeRoot);
+            root = this.rotateRight(root);
+        }
+        else {
+            TreeNode rightSubtreeRoot = this.rootInsert(root.getRight(), item, root);
+            root.setRight(rightSubtreeRoot);
+            root = this.rotateLeft(root);
+        }
+
+        return root;
+    }
+
 
     @Override
     public void insert(Suspect item) {
-        if (root != null) {
-            Suspect temp = searchByAFM(item.key());
-            if (temp != null) {
-                if (temp.key() == item.key()) {
-                    System.out.println("Suspect already exists.");
-                    return;
-                }
-            }
+        root = rootInsert(root, item, null);
+    }
+
+    private TreeNode rotateLeft(TreeNode pivot){
+        TreeNode parent = pivot.getParent();
+        TreeNode child = pivot.getRight();
+
+        if (parent == null){
+            root = child;
+        }
+        else if (parent.getLeft() == pivot){
+            parent.setLeft(child);
+        }
+        else {
+            parent.setRight(child);
         }
 
-        if (root == null)
-            root = new TreeNode(item);
+        child.setParent(pivot.getParent());
+        pivot.setParent(child);
+        pivot.setRight(child.getLeft());
 
-        TreeNode current = root;
-
-        while (true) {
-            if (current.getItem() == item)
-                return;
-
-            if (current.getItem().key() < item.key()) {
-//            if (current.getItem().compareTo(item) < 0) {
-                if (current.getRight() == null) {
-                    current.setRight(new TreeNode(item));
-                    return;
-                } else {
-                    current = current.getRight();
-                }
-            } else {
-                if (current.getLeft() == null) {
-                    current.setLeft(new TreeNode(item));
-                    return;
-                } else {
-                    current = current.getLeft();
-                }
-            }
+        if (child.getLeft() != null) {
+            child.getLeft().setParent(pivot);
         }
+        child.setLeft(pivot);
+        return child;
+    }
+
+
+    private TreeNode rotateRight(TreeNode pivot) {
+
+        TreeNode parent = pivot.getParent();
+        TreeNode child = pivot.getLeft();
+
+        if (parent == null) {
+            root = child;
+        }
+        else if (parent.getLeft() == pivot) {
+            parent.setLeft(child);
+        }
+        else {
+            parent.setRight(child);
+        }
+
+        child.setParent(pivot.getParent());
+        pivot.setParent(child);
+        pivot.setLeft(child.getRight());
+        if (child.getRight() != null) {
+            child.getRight().setParent(pivot);
+        }
+        child.setRight(pivot);
+        return child;
+    }
+
+    public int getSize(){
+        return size;
     }
 
     @Override
@@ -86,12 +138,11 @@ public class RandomizeBST implements MafiaInterface{
         tempSuspect.setSavings(savings);
     }
 
-
     @Override
     public Suspect searchByAFM(int AFM) {
         TreeNode temp = root;
         while (temp.getItem().key() != AFM){
-            if (AFM > temp.getItem().key()){
+            if (AFM < temp.getItem().key()){
                 temp = temp.getLeft();
             }
             else {
@@ -104,42 +155,23 @@ public class RandomizeBST implements MafiaInterface{
         return temp.getItem();
     }
 
-
-//    @Override
-//    public Suspect searchByAFM(int AFM) {
-//        TreeNode temp = root;
-//        while (true) {
-//            if (temp == null)
-//                return null;
-//            if (temp.getItem().key() == AFM) {
-//                return temp.getItem();
-//            }
-//            if(temp.getItem().key() < AFM){
-//                temp = temp.getLeft();
-//            }
-//            else {
-//                temp = temp.getRight();
-//            }
-//        }
-//    }
-
-    private void inOrderSearchLastName(StringDoubleEndedQueue<Suspect> queue, TreeNode treeNode, String last_name){
+    private void helpSearchLastName(StringDoubleEndedQueue<Suspect> queue, TreeNode treeNode, String last_name){
         if(treeNode != null){
-            inOrderSearchLastName(queue, treeNode.getLeft(), last_name);
+            helpSearchLastName(queue, treeNode.getLeft(), last_name);
             if (treeNode.getItem().getLastName().equals(last_name)) {
                 queue.addLast(treeNode.getItem());
                 if (queue.size()%5 == 0){
                     queue.printQueue(System.out);
                 }
             }
-            inOrderSearchLastName(queue, treeNode.getRight(), last_name);
+            helpSearchLastName(queue, treeNode.getRight(), last_name);
         }
     }
     @Override
     public StringDoubleEndedQueue<Suspect> searchByLastName(String last_name) {
         StringDoubleEndedQueue<Suspect> susQueue = new StringDoubleEndedQueueImpl<>();
         int i = 0;
-        inOrderSearchLastName(susQueue, root, last_name);
+        helpSearchLastName(susQueue, root, last_name);
         return susQueue;
     }
 
@@ -217,12 +249,15 @@ public class RandomizeBST implements MafiaInterface{
         return countSavings(root) / countSuspects(root);
     }
 
-    private void helperTopSuspects(PriorityQueueInterface susPQ, TreeNode treeNode, int top_k){
+    private void helperTopSuspects(PriorityQueueInterface susPQ,StringDoubleEndedQueue<Suspect> topSuspects, TreeNode treeNode, int top_k){
         if (treeNode == null)
             return;
-        helperTopSuspects(susPQ, treeNode.getLeft(),  top_k);
+        helperTopSuspects(susPQ, topSuspects, treeNode.getLeft(), top_k);
+        if (treeNode.getItem().getTaxedIncome() < 9000) {
+            topSuspects.addLast(treeNode.getItem());
+        }
         susPQ.add(treeNode.getItem());
-        helperTopSuspects(susPQ, treeNode.getRight(), top_k);
+        helperTopSuspects(susPQ, topSuspects,treeNode.getRight(), top_k);
 
     }
 
@@ -230,24 +265,32 @@ public class RandomizeBST implements MafiaInterface{
     public void printTopSuspects(int top_k) {
 
         PriorityQueueInterface<Suspect> susPQ = new HeapPriorityQueue<>(new SuspectComparator());
-        helperTopSuspects(susPQ, root, top_k);
+        StringDoubleEndedQueue<Suspect> topSuspects = new StringDoubleEndedQueueImpl<>();
+        helperTopSuspects(susPQ,topSuspects, root, top_k);
         System.out.println("Top " + top_k + " suspects are: ");
-        for (int i = 0; i < top_k; i++)
-            System.out.println(susPQ.getMax());
+
+        for (int i = 0; i < top_k; i++){
+            if (!topSuspects.isEmpty()) {
+                System.out.println(topSuspects.removeFirst());
+            }
+            else {
+                System.out.println(susPQ.getMax());
+            }
+        }
 
     }
 
     @Override
     public void printByAFM() {
-        inOrderFromRightToLeft(root);
+        inOrderRecursive(root);
     }
 
-    private void inOrderFromRightToLeft(TreeNode treeNode) {
+    private void inOrderRecursive(TreeNode treeNode) {
         if (treeNode == null)
             return;
-        inOrderFromRightToLeft(treeNode.getLeft());
+        inOrderRecursive(treeNode.getLeft());
         System.out.println(treeNode.getItem());
-        inOrderFromRightToLeft(treeNode.getRight());
+        inOrderRecursive(treeNode.getRight());
 
     }
 
