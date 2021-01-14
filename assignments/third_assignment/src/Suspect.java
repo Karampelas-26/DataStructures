@@ -5,6 +5,7 @@ public class Suspect implements Comparable<Suspect> {
     private double savings;
     private double taxedIncome;
     private double diff;
+
     public Suspect() {
     }
 
@@ -57,7 +58,7 @@ public class Suspect implements Comparable<Suspect> {
         this.taxedIncome = taxedIncome;
     }
 
-    public int key(){
+    public int key() {
         return this.AFM;
     }
 
@@ -74,17 +75,28 @@ public class Suspect implements Comparable<Suspect> {
         return sb.toString();
     }
 
-    public double calculateSuspicion(){
+    public double calculateSuspicion() {
         return this.savings - this.taxedIncome;
     }
+
     @Override
     public int compareTo(Suspect suspect) {
         double compared = this.calculateSuspicion() - suspect.calculateSuspicion();
-        if (compared > 0)
-            return 1;
-        else if (compared < 0)
-            return -1;
-        else
-            return 0;
+        if (this.taxedIncome < 9000.0) {
+            if (suspect.taxedIncome < this.taxedIncome)
+                return -1;
+            else if (suspect.taxedIncome > this.taxedIncome)
+                return 1;
+            else
+                return 0;
+        }
+        else {
+            if (compared > 0)
+                return 1;
+            else if (compared < 0)
+                return -1;
+            else
+                return 0;
+        }
     }
 }
