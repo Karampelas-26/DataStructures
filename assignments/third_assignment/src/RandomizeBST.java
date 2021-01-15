@@ -256,7 +256,9 @@ public class RandomizeBST implements MafiaInterface{
         if (treeNode.getItem().getTaxedIncome() < 9000) {
             topSuspects.addLast(treeNode.getItem());
         }
-        susPQ.add(treeNode.getItem());
+        else{
+            susPQ.add(treeNode.getItem());
+        }
         helperTopSuspects(susPQ, topSuspects,treeNode.getRight(), top_k);
 
     }
